@@ -20,6 +20,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    //Creates a new category.
     @PostMapping
     public ResponseEntity<String> createCategory(
             @Valid @RequestBody CategoryRequest categoryRequest
@@ -31,6 +32,7 @@ public class CategoryController {
     }
 
 
+    //Retrieves all categories and converts them into response DTOs.
     @GetMapping
     public List<CategoryResponse> findAllCategory(){
         List<Category> categoryList = categoryService.findAll();
@@ -48,6 +50,7 @@ public class CategoryController {
     }
 
 
+    //Retrieves a single category by its ID.
     @GetMapping("/{categoryId}")
     public CategoryResponse categoryFindById(
             @PathVariable("categoryId") Long categoryId
@@ -62,6 +65,7 @@ public class CategoryController {
     }
 
 
+    //Updates an existing category by ID.
     @PutMapping("/{categoryId}")
     public ResponseEntity<String> updateCategory(
             @PathVariable ("categoryId") Long categoryId,
@@ -71,6 +75,8 @@ public class CategoryController {
         return ResponseEntity.ok("category update successfully");
     }
 
+
+    //Updates an existing category by ID.
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<String> deleteCategory(
             @PathVariable ("categoryId") Long categoryId
