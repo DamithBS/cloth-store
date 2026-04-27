@@ -2,11 +2,14 @@ package com.example.clothes_store.Model.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "product_variants")
 public class ProductVariant {
@@ -20,7 +23,7 @@ public class ProductVariant {
     @Column(nullable = false, length = 50)
     private String color;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, length = 100)
     private String sku;
 
     @Column(nullable = false, precision = 10, scale = 2)
@@ -33,7 +36,7 @@ public class ProductVariant {
     @OneToMany(mappedBy = "productVariant")
     private List<OrderItem> orderItems;
 
-    @OneToOne(mappedBy = "productVariant")
+    @OneToOne(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
     private Inventory inventory;
 
 }

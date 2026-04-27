@@ -76,7 +76,7 @@ public class CategoryController {
     }
 
 
-    //Updates an existing category by ID.
+    //Delete an existing category by ID.
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<String> deleteCategory(
             @PathVariable ("categoryId") Long categoryId

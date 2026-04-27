@@ -2,8 +2,11 @@ package com.example.clothes_store.Model.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "inventory")
 public class Inventory {
@@ -12,7 +15,7 @@ public class Inventory {
     private Long id;
 
     @Column(nullable = false)
-    private Integer stock_quantity =0;
+    private Integer stockQuantity =0;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_variant_id")
