@@ -27,7 +27,7 @@ public class Address {
     private String country;
 
     @Column(nullable = false)
-    private Boolean is_default;
+    private Boolean isDefault;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
