@@ -11,7 +11,7 @@ import java.util.List;
 public class Wishlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @OneToMany(mappedBy = "wishlist",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishlistItem> wishlistItems;

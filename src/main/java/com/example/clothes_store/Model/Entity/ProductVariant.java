@@ -39,4 +39,7 @@ public class ProductVariant {
     @OneToOne(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
     private Inventory inventory;
 
+    @OneToMany(mappedBy = "productVariant")
+    private List<CartItem> cartItems;
+
 }
