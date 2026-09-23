@@ -7,6 +7,7 @@ import com.example.clothes_store.Service.CartService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,12 +30,14 @@ public class CartController {
             String userName= authentication.getName();
             cartService.addToCart(userName,addToCartRequest);
 
-            return ResponseEntity.ok("Product added to cart successfully");
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body("Product added to cart successfully");
     }
 
 
     @RolesAllowed("USER")
-    @GetMapping
+    @GetMapping("/items")
     public ResponseEntity<CartResponse> getCart(
            Authentication authentication
     ){
@@ -54,7 +57,9 @@ public class CartController {
         String userName= authentication.getName();
         cartService.updateCartItem(userName,cartItemId,updateCartItemRequest);
 
-        return ResponseEntity.ok("Cart item updated successfully");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("Cart item updated successfully");
     }
 
     @RolesAllowed("USER")
