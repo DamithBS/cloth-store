@@ -3,12 +3,16 @@ package com.example.clothes_store.Model.Entity;
 import com.example.clothes_store.Model.Eum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -30,10 +34,7 @@ public class Order {
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<OrderItem> orderItems;
-
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CouponUsage> couponUsages;
+    private List<OrderItem> orderItems =new ArrayList<>();;
 
     @OneToOne(mappedBy = "order")
     private Payment payment;
@@ -41,6 +42,4 @@ public class Order {
     @OneToOne(mappedBy = "order")
     private Delivery delivery;
 
-    @OneToOne(mappedBy = "order")
-    private Coupon coupon;
 }
