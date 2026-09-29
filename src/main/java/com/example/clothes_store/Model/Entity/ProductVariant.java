@@ -42,4 +42,7 @@ public class ProductVariant {
     @OneToMany(mappedBy = "productVariant")
     private List<CartItem> cartItems;
 
+    @OneToMany(mappedBy = "productVariant")
+    private List<WishlistItem> wishlistItems;
+
 }

@@ -2,23 +2,19 @@ package com.example.clothes_store.Service.impl;
 
 import com.example.clothes_store.Controller.DTO.Response.WishlistItemResponse;
 import com.example.clothes_store.Controller.DTO.Response.WishlistResponse;
+import com.example.clothes_store.Exception.InsufficientStockException;
 import com.example.clothes_store.Exception.ProductAlreadyInWishlistException;
 import com.example.clothes_store.Exception.ProductNotFoundException;
 import com.example.clothes_store.Exception.ResourceNotFoundException;
-import com.example.clothes_store.Model.Entity.Product;
-import com.example.clothes_store.Model.Entity.User;
-import com.example.clothes_store.Model.Entity.Wishlist;
-import com.example.clothes_store.Model.Entity.WishlistItem;
-import com.example.clothes_store.Repository.ProductRepository;
-import com.example.clothes_store.Repository.UserRepository;
-import com.example.clothes_store.Repository.WishlistItemRepository;
-import com.example.clothes_store.Repository.WishlistRepository;
+import com.example.clothes_store.Model.Entity.*;
+import com.example.clothes_store.Repository.*;
 import com.example.clothes_store.Service.WishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,38 +24,41 @@ public class WishlistServiceImpl implements WishlistService {
     private final WishlistRepository wishlistRepository;
     private final WishlistItemRepository wishlistItemRepository;
     private final UserRepository userRepository;
-    private final ProductRepository productRepository;
+    private final ProductVariantRepository productVariantRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final InventoryRepository inventoryRepository;
 
 
     // ADD PRODUCT TO WISHLIST
     @Override
     @Transactional
-    public void addToWishlist(String userName, Long productId){
+    public void addToWishlist(String userName, Long productVariantId){
 
         // Find authenticated user
         User user = getUser(userName);
 
         // Find product
-        Product product = productRepository.findById(productId)
-                .orElseThrow(()-> new ProductNotFoundException("Product not found "));
+        ProductVariant productVariant = productVariantRepository.findById(productVariantId)
+                .orElseThrow(()-> new ProductNotFoundException("Product Variant not found "));
 
         // create wish list find user
         Wishlist wishlist = wishlistRepository.findByUserUserName(userName)
                 .orElseGet(() -> createWishlist(user));
 
         //  Check duplicate
-        boolean alreadyExists = wishlistItemRepository.existsByWishlistIdAndProductId(
+        boolean alreadyExists = wishlistItemRepository.existsByWishlistIdAndProductVariantId(
                 wishlist.getId(),
-                productId
+                productVariantId
         );
         if (alreadyExists){
-            throw new ProductAlreadyInWishlistException("Product is already in your wishlist");
+            throw new ProductAlreadyInWishlistException("Product Variant is already in your wishlist");
         }
 
         // Create WishlistItem
         WishlistItem wishlistItem= new WishlistItem();
 
-        wishlistItem.setProduct(product);
+        wishlistItem.setProductVariant(productVariant);
         wishlistItem.setWishlist(wishlist);
 
         // Add item to wishlist
@@ -122,6 +121,69 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
 
+
+    @Override
+    @Transactional
+    public void addWishlistItemToCart(String userName,Long wishlistItemId){
+
+        User user = getUser(userName);
+
+
+        // find wish list in username
+        Wishlist wishlist = wishlistRepository.findByUserUserName(userName)
+                .orElseThrow(()-> new ResourceNotFoundException("Wishlist not found")
+                );
+
+        // Find item belonging to this wishlist
+        WishlistItem wishlistItem= wishlistItemRepository.findByIdAndWishlistId(wishlistItemId,wishlist.getId())
+                .orElseThrow(()-> new ResourceNotFoundException("Wishlist item not found ")
+                );
+
+        ProductVariant productVariant = wishlistItem.getProductVariant();
+
+        Inventory inventory = inventoryRepository.findByProductVariantId(productVariant.getId())
+                .orElseThrow(()-> new ResourceNotFoundException( "Inventory not found"));
+
+
+        if (inventory.getStockQuantity() == null || inventory.getStockQuantity() < 1){
+            throw new InsufficientStockException("Product is out of stock");
+        }
+
+        Cart cart = cartRepository.findByUserId(user.getId())
+                .orElseGet(()-> {
+                    Cart newCart =new Cart();
+
+                    newCart.setUser(user);
+                    newCart.setCreated_at(LocalDateTime.now());
+
+                    return cartRepository.save(newCart);
+                });
+
+        CartItem cartItem = cartItemRepository.findByCartIdAndProductVariantId(cart.getId(),productVariant.getId())
+                .orElse(null);
+
+        if (cartItem != null){
+            int newQuantity = cartItem.getQuantity() + 1;
+
+            if (newQuantity > inventory.getStockQuantity()){
+                throw new InsufficientStockException("items are not available");
+
+            }
+
+            cartItem.setQuantity(newQuantity);
+
+        }
+        else {
+            cartItem = new CartItem();
+            cartItem.setCart(cart);
+            cartItem.setProductVariant(productVariant);
+            cartItem.setQuantity(1);
+        }
+
+        cartItemRepository.save(cartItem);
+    }
+
+
      //---------------------------------
     // HELPER METHODS
 
@@ -148,7 +210,8 @@ public class WishlistServiceImpl implements WishlistService {
     private WishlistItemResponse mapToWishlistItemResponse(
             WishlistItem wishlistItem
     ){
-        Product product =wishlistItem.getProduct();
+         ProductVariant productVariant = wishlistItem.getProductVariant();
+        Product product =productVariant.getProduct();
 
         return WishlistItemResponse.builder()
                 .wishlistItemId(wishlistItem.getId())
@@ -156,6 +219,9 @@ public class WishlistServiceImpl implements WishlistService {
                 .productName(product.getName())
                 .description(product.getDescription())
                 .basePrice(product.getBasePrice())
+                .color(productVariant.getColor())
+                .sku(productVariant.getSku())
+                .size(productVariant.getSize())
                 .build();
     }
 }

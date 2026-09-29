@@ -26,9 +26,6 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
-    @OneToMany(mappedBy = "payment",cascade = CascadeType.ALL , orphanRemoval = false,fetch = FetchType.LAZY)
-    private List<PaymentTransaction> paymentTransactions = new ArrayList<>();
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id",unique = true)
     private Order order;

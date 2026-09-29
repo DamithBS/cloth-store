@@ -17,13 +17,13 @@ public class WishlistController {
     private final WishlistService wishlistService;
 
     @RolesAllowed("USER")
-    @PostMapping("/items/{productId}")
+    @PostMapping("/items/{productVariantId}")
     public ResponseEntity<String> addToWishlist(
             Authentication authentication,
-            @PathVariable Long productId
+            @PathVariable Long productVariantId
     ){
         String userName= authentication.getName();
-        wishlistService.addToWishlist(userName,productId);
+        wishlistService.addToWishlist(userName,productVariantId);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -53,5 +53,20 @@ public class WishlistController {
         wishlistService.deleteWishlistItem(userName,wishlistItemId);
 
         return ResponseEntity.ok("Delete wishlist item successfully");
+    }
+
+
+    @RolesAllowed("USER")
+    @PostMapping("items/{wishlistItemId}/cart")
+    public ResponseEntity<String> addWishlistToCart(
+            Authentication authentication,
+            @PathVariable Long wishlistItemId
+    ){
+        String userName = authentication.getName();
+        wishlistService.addWishlistItemToCart(userName,wishlistItemId);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("Wishlist item added to cart successfully");
+
     }
 }

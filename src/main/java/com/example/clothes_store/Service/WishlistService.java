@@ -9,4 +9,6 @@ public interface WishlistService {
     WishlistResponse getWishlist(String userName);
 
     void deleteWishlistItem(String userName, Long wishlistItemId);
+
+    void addWishlistItemToCart(String userName, Long wishlistItemId);
 }

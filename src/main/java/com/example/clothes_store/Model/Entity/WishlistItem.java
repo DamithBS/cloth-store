@@ -13,7 +13,7 @@ public class WishlistItem {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private ProductVariant productVariant;
 
     @ManyToOne
     @JoinColumn(name = "wishlist_id")

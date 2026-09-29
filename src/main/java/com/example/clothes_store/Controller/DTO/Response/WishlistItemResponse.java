@@ -19,6 +19,10 @@ public class WishlistItemResponse {
 
     private BigDecimal basePrice;
 
+    private String size;
 
+    private String color;
+
+    private String sku;
 
 }
