@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,12 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
+
+    @Column(nullable = false, unique = true, length = 100)
+    private String transactionId;
+
+    @Column(nullable = false)
+    private LocalDateTime paymentDate;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id",unique = true)

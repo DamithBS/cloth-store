@@ -122,10 +122,12 @@ public class WishlistServiceImpl implements WishlistService {
 
 
 
+    // wish list items add to the cart
     @Override
     @Transactional
     public void addWishlistItemToCart(String userName,Long wishlistItemId){
 
+        // Find authenticated user
         User user = getUser(userName);
 
 
@@ -139,16 +141,20 @@ public class WishlistServiceImpl implements WishlistService {
                 .orElseThrow(()-> new ResourceNotFoundException("Wishlist item not found ")
                 );
 
+        // Get ProductVariant
         ProductVariant productVariant = wishlistItem.getProductVariant();
 
+        //Find inventory
         Inventory inventory = inventoryRepository.findByProductVariantId(productVariant.getId())
                 .orElseThrow(()-> new ResourceNotFoundException( "Inventory not found"));
 
 
+        //Check stock
         if (inventory.getStockQuantity() == null || inventory.getStockQuantity() < 1){
             throw new InsufficientStockException("Product is out of stock");
         }
 
+        //Find user's cart or create one
         Cart cart = cartRepository.findByUserId(user.getId())
                 .orElseGet(()-> {
                     Cart newCart =new Cart();
@@ -159,9 +165,11 @@ public class WishlistServiceImpl implements WishlistService {
                     return cartRepository.save(newCart);
                 });
 
+        //Check whether this variant already exists in cart
         CartItem cartItem = cartItemRepository.findByCartIdAndProductVariantId(cart.getId(),productVariant.getId())
                 .orElse(null);
 
+        //If already exists → increase quantity
         if (cartItem != null){
             int newQuantity = cartItem.getQuantity() + 1;
 
@@ -173,6 +181,8 @@ public class WishlistServiceImpl implements WishlistService {
             cartItem.setQuantity(newQuantity);
 
         }
+
+        // Otherwise create new CartItem
         else {
             cartItem = new CartItem();
             cartItem.setCart(cart);
@@ -180,6 +190,7 @@ public class WishlistServiceImpl implements WishlistService {
             cartItem.setQuantity(1);
         }
 
+        // Save CartItem
         cartItemRepository.save(cartItem);
     }
 
