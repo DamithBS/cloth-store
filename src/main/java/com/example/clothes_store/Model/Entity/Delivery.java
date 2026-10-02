@@ -17,8 +17,9 @@ public class Delivery {
     @Column(nullable = false, unique = true, length = 100)
     private String trackingNumber;
 
-    private LocalDateTime shipped_date;
-    private LocalDateTime delivered_date;
+    private LocalDateTime shippedDate;
+
+    private LocalDateTime deliveredDate;
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;

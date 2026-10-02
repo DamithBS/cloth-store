@@ -12,6 +12,7 @@ import com.example.clothes_store.Model.Eum.PaymentStatus;
 import com.example.clothes_store.Repository.OrderRepository;
 import com.example.clothes_store.Repository.PaymentRepository;
 import com.example.clothes_store.Repository.UserRepository;
+import com.example.clothes_store.Service.DeliveryService;
 import com.example.clothes_store.Service.PaymentService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,6 +29,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final DeliveryService deliveryService;
 
 
     // payment pay in order items
@@ -85,6 +87,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         payment.setPaymentStatus(PaymentStatus.SUCCESS);
         order.setOrderStatus(OrderStatus.CONFIRMED);
+        deliveryService.createDelivery(order);
         orderRepository.save(order);
 
         // Save payment
