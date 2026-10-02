@@ -63,9 +63,7 @@ public class DeliveryController {
     ){
         deliveryService.cancelDelivery(orderId);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body("Delivery cancelled successfully");
+        return ResponseEntity.ok("Delivery cancelled successfully");
     }
 }
 

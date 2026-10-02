@@ -3,6 +3,8 @@ package com.example.clothes_store.Model.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "reviews")
@@ -12,10 +14,13 @@ public class Review {
     private Long id;
 
     @Column(nullable = false)
-    private Double rating;
+    private Integer rating;
 
     @Column(length = 1000)
     private String comment;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

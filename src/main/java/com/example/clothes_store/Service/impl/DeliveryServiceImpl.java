@@ -118,7 +118,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         // Delivery is completed,
         // therefore the Order should also be completed.
-        order.setOrderStatus(OrderStatus.CONFIRMED);
+        order.setOrderStatus(OrderStatus.COMPLETED);
 
         // Save the updated Delivery and Order
         deliveryRepository.save(delivery);
