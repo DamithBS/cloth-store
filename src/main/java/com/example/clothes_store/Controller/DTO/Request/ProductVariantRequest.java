@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 @Data
 public class ProductVariantRequest {
 
+    private Long id;
+
     @NotBlank(message = "Size is required")
     private String size;
 

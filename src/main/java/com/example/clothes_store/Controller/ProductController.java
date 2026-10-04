@@ -6,11 +6,13 @@ import com.example.clothes_store.Controller.DTO.Response.ProductVariantResponse;
 import com.example.clothes_store.Model.Entity.Product;
 import com.example.clothes_store.Model.Entity.ProductImage;
 import com.example.clothes_store.Service.ProductService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -23,11 +25,15 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @RolesAllowed("ADMIN")
     @PostMapping
     public ResponseEntity<String> createProduct(
-            @Valid @RequestBody ProductRequest productRequest
+            @Valid @RequestBody ProductRequest productRequest,
+            Authentication authentication
     ){
-        productService.create(productRequest);
+        String userName = authentication.getName();
+        productService.create(productRequest,userName);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("Product created successfully");
@@ -140,6 +146,7 @@ public class ProductController {
     }
 
 
+    @RolesAllowed("ADMIN")
     @PutMapping("/{productId}")
     public ResponseEntity<String> updateProduct(
             @PathVariable("productId") Long id,
@@ -150,6 +157,7 @@ public class ProductController {
     }
 
 
+    @RolesAllowed("ADMIN")
     @DeleteMapping("/{productId}")
     public ResponseEntity<String> deleteProduct(
             @PathVariable("productId") Long id

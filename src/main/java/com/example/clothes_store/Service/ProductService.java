@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    void create(ProductRequest productRequest);
+    void create(ProductRequest productRequest, String userName);
 
     List<Product> findAll(Pageable pageable);
 

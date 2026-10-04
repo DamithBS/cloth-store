@@ -4,6 +4,7 @@ import com.example.clothes_store.Controller.DTO.Request.SubCategoryRequest;
 import com.example.clothes_store.Controller.DTO.Response.SubCategoryResponse;
 import com.example.clothes_store.Model.Entity.SubCategory;
 import com.example.clothes_store.Service.SubCategoryService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class SubCategoryController {
     private SubCategoryService subCategoryService;
 
     //Create a new subcategory under an existing category.
+    @RolesAllowed("ADMIN")
     @PostMapping("/{categoryId}")
     public ResponseEntity<String> createSubCategory(
             @PathVariable("categoryId") Long categoryId ,
@@ -60,6 +62,7 @@ public class SubCategoryController {
     }
 
     //Update an existing subcategory by ID.
+    @RolesAllowed("ADMIN")
     @PutMapping("/{subCategoryId}")
     public ResponseEntity<String> updateSubCategory(
             @PathVariable("subCategoryId") Long subCategoryId,
@@ -70,6 +73,7 @@ public class SubCategoryController {
     }
 
     //Delete a subcategory by ID.
+    @RolesAllowed("ADMIN")
     @DeleteMapping("/{subCategoryId}")
     public ResponseEntity<String> deleteSubCategory(
             @PathVariable("subCategoryId") Long subCategoryId

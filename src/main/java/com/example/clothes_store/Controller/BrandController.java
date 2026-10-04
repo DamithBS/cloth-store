@@ -4,6 +4,7 @@ import com.example.clothes_store.Controller.DTO.Request.BrandRequest;
 import com.example.clothes_store.Controller.DTO.Response.BrandResponse;
 import com.example.clothes_store.Model.Entity.Brand;
 import com.example.clothes_store.Service.BrandService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class BrandController {
     private BrandService brandService;
 
     //Create a new brand
+    @RolesAllowed("ADMIN")
     @PostMapping
     public ResponseEntity<String> createBrand(
             @Valid @RequestBody BrandRequest brandRequest
@@ -62,6 +64,7 @@ public class BrandController {
 
 
     //Updates an existing brand by ID.
+    @RolesAllowed("ADMIN")
     @PutMapping("/{brandId}")
     public ResponseEntity<String> updateBrand(
             @PathVariable("brandId") Long id,
@@ -73,6 +76,7 @@ public class BrandController {
 
 
     //Delete an existing Brand by ID.
+    @RolesAllowed("ADMIN")
     @DeleteMapping("/{brandId}")
     public ResponseEntity<String> deleteBrand(
             @PathVariable("brandId") Long id

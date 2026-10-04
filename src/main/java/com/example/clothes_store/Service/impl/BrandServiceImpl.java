@@ -28,7 +28,7 @@ public class BrandServiceImpl implements BrandService {
         }
 
         Brand brand = new Brand();
-        brand.setName(brandRequest.getName());
+        brand.setName(BrandName);
         brandRepository.save(brand);
     }
 

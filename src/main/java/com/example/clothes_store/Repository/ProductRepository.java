@@ -14,7 +14,7 @@ public interface ProductRepository extends JpaRepository<Product ,Long> {
 
     boolean existsByNameIgnoreCase(String name);
 
-//    Page<Product> findAll(Pageable pageable);
+
 
     @EntityGraph(attributePaths = {
             "productVariants",
@@ -24,8 +24,8 @@ public interface ProductRepository extends JpaRepository<Product ,Long> {
             "brand",
             "productImages"
     })
-    @Query("SELECT p FROM Product p")
-//    List<Product> findAll();
+    @Query("SELECT p FROM Product p ")
+
     Page<Product> findAll(Pageable pageable);
 
     @EntityGraph(attributePaths = {

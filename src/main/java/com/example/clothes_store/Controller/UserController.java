@@ -40,7 +40,7 @@ public class UserController {
         userService.create(userRequest);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("User created successfully");
+                .body("Account created successfully");
     }
 
 

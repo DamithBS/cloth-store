@@ -10,10 +10,12 @@ import com.example.clothes_store.Repository.SubCategoryRepository;
 import com.example.clothes_store.Service.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Autowired

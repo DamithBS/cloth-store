@@ -4,6 +4,7 @@ import com.example.clothes_store.Controller.DTO.Request.CategoryRequest;
 import com.example.clothes_store.Controller.DTO.Response.CategoryResponse;
 import com.example.clothes_store.Model.Entity.Category;
 import com.example.clothes_store.Service.CategoryService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     //Creates a new category.
+    @RolesAllowed("ADMIN")
     @PostMapping
     public ResponseEntity<String> createCategory(
             @Valid @RequestBody CategoryRequest categoryRequest
@@ -66,6 +68,7 @@ public class CategoryController {
 
 
     //Updates an existing category by ID.
+    @RolesAllowed("ADMIN")
     @PutMapping("/{categoryId}")
     public ResponseEntity<String> updateCategory(
             @PathVariable ("categoryId") Long categoryId,
@@ -77,6 +80,7 @@ public class CategoryController {
 
 
     //Delete an existing category by ID.
+    @RolesAllowed("ADMIN")
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<String> deleteCategory(
             @PathVariable ("categoryId") Long categoryId
