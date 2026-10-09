@@ -1,9 +1,19 @@
 package com.example.clothes_store.Controller.DTO.Response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 @Data
-public class SubCategoryResponse {
+@AllArgsConstructor
+@NoArgsConstructor
+public class SubCategoryResponse implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private Long id;
     private String name;
     private String categoryName;
     private String categoryDescriptions;

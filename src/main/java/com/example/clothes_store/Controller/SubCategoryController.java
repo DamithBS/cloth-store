@@ -36,30 +36,20 @@ public class SubCategoryController {
 
     //Fetch all subcategories and convert them into response DTOs.
     @GetMapping
-    public List<SubCategoryResponse> allSubCategory(){
+    public ResponseEntity<List<SubCategoryResponse>> allSubCategory(){
 
-        //Get all subcategories from service layer
-        List<SubCategory> subCategoryList = subCategoryService.findAll();
-
-        // Convert entity list into response DTO list
-        List<SubCategoryResponse> responseList = new ArrayList<>();
-
-        for (SubCategory subCategory : subCategoryList){
-            responseList.add(mapToResponse(subCategory));
-        }
-        return responseList;
+        return ResponseEntity.ok(subCategoryService.findAll());
     }
 
 
     //Fetch a single subcategory by ID.
     @GetMapping("/{subCategoryId}")
-    public SubCategoryResponse getSubCategoryByID(
+    public ResponseEntity<SubCategoryResponse> getSubCategoryByID(
             @PathVariable("subCategoryId") Long subCategoryId
     ){
-        SubCategory subCategory = subCategoryService.findById(subCategoryId);
-
-        return mapToResponse(subCategory);
+       return ResponseEntity.ok(subCategoryService.findById(subCategoryId));
     }
+
 
     //Update an existing subcategory by ID.
     @RolesAllowed("ADMIN")
@@ -84,14 +74,5 @@ public class SubCategoryController {
 
 
 
-
-    //Helper method to convert SubCategory entity into SubCategoryResponse DTO.
-    private SubCategoryResponse mapToResponse(SubCategory subCategory) {
-        SubCategoryResponse subCategoryResponse = new SubCategoryResponse();
-        subCategoryResponse.setName(subCategory.getName());
-        subCategoryResponse.setCategoryName(subCategory.getCategory().getName());
-        subCategoryResponse.setCategoryDescriptions(subCategory.getCategory().getDescription());
-        return subCategoryResponse;
-    }
 }
 

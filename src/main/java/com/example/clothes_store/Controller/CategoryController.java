@@ -7,6 +7,7 @@ import com.example.clothes_store.Service.CategoryService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,34 +37,19 @@ public class CategoryController {
 
     //Retrieves all categories and converts them into response DTOs.
     @GetMapping
-    public List<CategoryResponse> findAllCategory(){
-        List<Category> categoryList = categoryService.findAll();
-        List<CategoryResponse> responseList = new ArrayList<>();
+    public ResponseEntity<List<CategoryResponse>> findAllCategory(){
 
-        for (Category category : categoryList){
-            CategoryResponse categoryResponse = new CategoryResponse();
-
-            categoryResponse.setName(category.getName());
-            categoryResponse.setDescription(category.getDescription());
-
-            responseList.add(categoryResponse);
-        }
-        return responseList;
+        return ResponseEntity.ok(categoryService.findAll());
     }
 
 
     //Retrieves a single category by its ID.
     @GetMapping("/{categoryId}")
-    public CategoryResponse categoryFindById(
+    public ResponseEntity<CategoryResponse> categoryFindById(
             @PathVariable("categoryId") Long categoryId
     ){
-        Category category =categoryService.findById(categoryId);
-        CategoryResponse categoryResponse = new CategoryResponse();
 
-        categoryResponse.setName(category.getName());
-        categoryResponse.setDescription(category.getDescription());
-
-        return categoryResponse;
+        return ResponseEntity.ok(categoryService.findById(categoryId));
     }
 
 

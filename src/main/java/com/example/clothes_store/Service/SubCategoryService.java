@@ -1,6 +1,7 @@
 package com.example.clothes_store.Service;
 
 import com.example.clothes_store.Controller.DTO.Request.SubCategoryRequest;
+import com.example.clothes_store.Controller.DTO.Response.SubCategoryResponse;
 import com.example.clothes_store.Exception.SubCategoryNotFoundException;
 import com.example.clothes_store.Model.Entity.SubCategory;
 
@@ -14,10 +15,10 @@ public interface SubCategoryService {
     void create (Long id, SubCategoryRequest subCategoryRequest);
 
     // Retrieve all subcategories from the database.
-    List<SubCategory> findAll();
+    List<SubCategoryResponse> findAll();
 
     //Find a subcategory by its ID.
-    SubCategory findById(Long id) throws SubCategoryNotFoundException;
+    SubCategoryResponse findById(Long id) throws SubCategoryNotFoundException;
 
     //Update an existing subcategory.
     void update(Long id , SubCategoryRequest subCategoryRequest);

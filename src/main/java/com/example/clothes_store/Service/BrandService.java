@@ -1,6 +1,7 @@
 package com.example.clothes_store.Service;
 
 import com.example.clothes_store.Controller.DTO.Request.BrandRequest;
+import com.example.clothes_store.Controller.DTO.Response.BrandResponse;
 import com.example.clothes_store.Exception.BrandNotFoundException;
 import com.example.clothes_store.Model.Entity.Brand;
 
@@ -13,10 +14,10 @@ public interface BrandService {
     void create(BrandRequest brandRequest);
 
     //Retrieve all brand from the database.
-    List<Brand> findAll();
+    List<BrandResponse> findAll();
 
     //Find a brand by its ID.
-    Brand findById(Long id) throws BrandNotFoundException;
+    BrandResponse findById(Long id) throws BrandNotFoundException;
 
     //Update an existing brand by ID.
     void update(Long id , BrandRequest brandRequest);

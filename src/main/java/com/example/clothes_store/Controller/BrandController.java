@@ -35,31 +35,19 @@ public class BrandController {
 
     //Retrieves all brand and converts them into response DTOs.
     @GetMapping
-    public List<BrandResponse> findAllBrand(){
-        List<Brand> brandList = brandService.findAll();
-        List<BrandResponse> responseList = new ArrayList<>();
+    public ResponseEntity<List<BrandResponse>> findAllBrand(){
 
-        for(Brand brand: brandList){
-            BrandResponse brandResponse = new BrandResponse();
-
-            brandResponse.setName(brand.getName());
-
-            responseList.add(brandResponse);
-        }
-        return responseList;
+        return ResponseEntity.ok(brandService.findAll());
     }
 
 
     //Retrieves a single brand by its ID.
     @GetMapping("/{brandId}")
-    public BrandResponse brandFindById(
+    public ResponseEntity<BrandResponse> brandFindById(
             @PathVariable("brandId") Long id
     ){
-        Brand brand = brandService.findById(id);
-        BrandResponse brandResponse = new BrandResponse();
 
-        brandResponse.setName(brand.getName());
-        return brandResponse;
+        return ResponseEntity.ok(brandService.findById(id));
     }
 
 

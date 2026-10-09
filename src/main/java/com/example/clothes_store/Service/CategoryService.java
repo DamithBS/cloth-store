@@ -1,6 +1,7 @@
 package com.example.clothes_store.Service;
 
 import com.example.clothes_store.Controller.DTO.Request.CategoryRequest;
+import com.example.clothes_store.Controller.DTO.Response.CategoryResponse;
 import com.example.clothes_store.Exception.CategoryNotFoundException;
 import com.example.clothes_store.Model.Entity.Category;
 
@@ -13,10 +14,10 @@ public interface CategoryService {
     void create(CategoryRequest categoryRequest);
 
     //Retrieve all categories from the database.
-    List<Category> findAll();
+    List<CategoryResponse> findAll();
 
     //Find a category by its ID.
-    Category findById(Long id) throws CategoryNotFoundException;
+    CategoryResponse findById(Long id) throws CategoryNotFoundException;
 
     //Update an existing category by ID.
     void update(Long id, CategoryRequest categoryRequest);
