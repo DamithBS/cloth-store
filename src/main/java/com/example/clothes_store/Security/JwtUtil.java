@@ -3,6 +3,7 @@ package com.example.clothes_store.Security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,12 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb";
+    private static String SECRET_KEY;
+
+    @Value("${security.jwt.key}")
+    public void setSecretKey(String key) {
+        SECRET_KEY = key;
+    }
 
     public String generateToken(UserDetails userDetails){
         return Jwts.builder()

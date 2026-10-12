@@ -2,11 +2,13 @@ package com.example.clothes_store.Service.impl;
 
 import com.example.clothes_store.Controller.DTO.Request.ProductRequest;
 import com.example.clothes_store.Controller.DTO.Request.ProductVariantRequest;
+import com.example.clothes_store.Event.ProductCreatedEvent;
 import com.example.clothes_store.Exception.BrandNotFoundException;
 import com.example.clothes_store.Exception.ProductNotFoundException;
 import com.example.clothes_store.Exception.SubCategoryNotFoundException;
 import com.example.clothes_store.Model.Entity.*;
 import com.example.clothes_store.Model.Eum.ProductStatus;
+import com.example.clothes_store.Producer.ProductCreatedRabbitPublisher;
 import com.example.clothes_store.Repository.*;
 import com.example.clothes_store.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ProductCreatedRabbitPublisher productCreatedRabbitPublisher;
 
     // CREATE PRODUCT
     @Override
@@ -119,7 +123,19 @@ public class ProductServiceImpl implements ProductService {
         }
 
         //save product
-        productRepository.save(product);
+        Product saveProduct= productRepository.save(product);
+
+        // Create event using saved product details
+        ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent(
+                saveProduct.getId(),
+                saveProduct.getName(),
+                saveProduct.getBasePrice()
+        );
+
+        // Publish event to Fanout Exchange
+        productCreatedRabbitPublisher.publishProductCreated(productCreatedEvent);
+
+
     }
 
     // GET ALL ACTIVE PRODUCTS

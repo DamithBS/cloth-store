@@ -2,6 +2,7 @@ package com.example.clothes_store.Service.impl;
 
 import com.example.clothes_store.Controller.DTO.Response.OrderItemResponse;
 import com.example.clothes_store.Controller.DTO.Response.OrderResponse;
+import com.example.clothes_store.Event.OrderCreatedEvent;
 import com.example.clothes_store.Exception.InsufficientStockException;
 import com.example.clothes_store.Exception.ResourceNotFoundException;
 import com.example.clothes_store.Model.Entity.*;
@@ -9,6 +10,7 @@ import com.example.clothes_store.Model.Eum.OrderStatus;
 import com.example.clothes_store.Repository.*;
 import com.example.clothes_store.Service.OrderService;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ public class OrderServiceImpl implements OrderService {
     private final CartItemRepository cartItemRepository;
     private final InventoryRepository inventoryRepository;
     private final UserRepository userRepository;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     //create order in all cart items
     @Override
@@ -52,8 +56,6 @@ public class OrderServiceImpl implements OrderService {
         List<CartItem> cartItems = new ArrayList<>(cart.getCartItems());
 
         createOrder(cartItems,cart);
-
-
 
     }
 
@@ -223,6 +225,14 @@ public class OrderServiceImpl implements OrderService {
             cartItemRepository.delete(cartItem);
         }
 
+        //order event create to save order
+        //Direct Exchange RabbitMQ
+        eventPublisher.publishEvent(
+                new OrderCreatedEvent(
+                        order.getId(),
+                        order.getUser().getId()
+                )
+        );
 
     }
 
